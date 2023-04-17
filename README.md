@@ -9,4 +9,4 @@
 ## Các chức năng chính & kế hoạch thực hiện
 | Chức năng | Người thực hiện | Ngày hoàn thành dự kiến |
 | --------- | --------------- | ----------------------- |
-| Danh sách học sinh
+| Danh sách học sinh | Trần Gia Huy | 25/4/2023
