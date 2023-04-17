@@ -7,7 +7,7 @@ def main():
     with AnalyzeTab:
         st.header('Phân tích dữ liệu')
     with DataTab:
-        Data = pd.read_csv('data.csv')
+        Data = pd.read_csv('py4ai-score.csv')
         Data.drop(['NAME','GENDER','CLASS'],axis='columns',inplace=True)
         st.dataframe(data=Data)
     pass
