@@ -11,7 +11,7 @@ def main():
     with DataTab:
         Data = pd.read_csv('py4ai-score.csv')
         Data.drop(['NAME','GENDER','CLASS'],axis='columns',inplace=True)
-        st.table(data=Data)
+        st.dataframe(data=Data)
     pass
 
 if __name__ == '__main__':
