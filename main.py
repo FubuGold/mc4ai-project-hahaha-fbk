@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+
 def main(): 
     st.set_page_config(layout="wide")
     st.title('Phân tích và xem điểm Python4AI 092022')
@@ -20,7 +21,7 @@ def main():
         with col2:
             st.header('Danh sách username, password mặc định')
             pwd_df = pd.DataFrame({
-                'Username': Data[['NAME','CLASS']].apply(''.join, axis=1),
+                'Username': Data['NAME'] + Data['CLASS'] + '\t\t\t\t\t\t\t\t',
                 'Password': ['123456789' for _ in range(len(Data))] 
             })
             st.dataframe(data=pwd_df, height=1000)
