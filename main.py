@@ -10,7 +10,7 @@ def main():
     with AnalyzeTab:
         st.header('Phân tích dữ liệu')
     with DataTab:
-        col1,col2 = st.columns([50,10])
+        col1,col2 = st.columns(2)
         with col1:
             SubData_Point = Data.drop(['NAME','GENDER','CLASS'],axis='columns').sample(frac=1, random_state=69)
             SubData_Point.reset_index(drop=True)
