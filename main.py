@@ -21,7 +21,7 @@ def main():
         with col2:
             st.header('Danh sách username, password mặc định')
             pwd_df = pd.DataFrame({
-                'Username': Data['NAME'] + Data['CLASS'] + '\t\t\t\t\t\t\t\t',
+                'Username': Data['NAME'] + Data['CLASS'],
                 'Password': ['123456789' for _ in range(len(Data))] 
             })
             st.dataframe(data=pwd_df, height=1000)
