@@ -10,7 +10,7 @@ def main():
     with AnalyzeTab:
         st.header('Phân tích dữ liệu')
     with DataTab:
-        Data = pd.read_csv('py4ai-score.csv')
+        Data = pd.read_csv('py4ai-score.csv').sample(frac=1, random_state=69)
         Data.drop(['NAME','GENDER','CLASS'],axis='columns',inplace=True)
         st.dataframe(data=Data, height=1000)
 
