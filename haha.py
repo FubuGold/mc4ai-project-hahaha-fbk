@@ -1,5 +1,4 @@
 import plotly.express as px
-import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import streamlit as st
@@ -11,15 +10,12 @@ def analyze(data):
     st.plotly_chart(px.pie(data, names ='GENDER'))
     st.plotly_chart(px.pie(data, names ='PYTHON-CLASS'))
     ##########################################################
-    for i in range(10):
-        temp = [float(j) for j in data['S'+ str(i+1)]]
-        data['S'+ str(i+1)] = temp
-    temp = [np.array(data['S'+ str(i+1)]).mean() for i in range(10)]
-    index = [i for i in range(1,11)]
-    d1 = pd.DataFrame({'avg_score' : temp,
-                       'index'     : index})
-    n_bins = 20
-    plt.hist(d1['avg_score'], n_bins, density = True, 
-         histtype ='bar')
-    plt.bar(x = d1['index'], y = d1['avg_score'])
-    plt.show()
+    data.replace(float('nan'), 0)  # refine the data
+
+    average = pd.DataFrame(columns=["Session", "Average Score"])
+    for i in range(1, 11): #calculate the average score of each session and add to the average dataframe
+        average = average.append(
+            pd.Series([f"S{i}", round(data[f"S{i}"].mean(), 1)], index=average.columns), 
+            ignore_index=True
+        )
+    st.plotly_chart(px.bar(average, y = "Average Score", x = "Session"))
