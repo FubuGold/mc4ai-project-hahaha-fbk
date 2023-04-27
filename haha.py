@@ -10,10 +10,10 @@ def analyze(data):
     st.plotly_chart(px.pie(data, names ='GENDER'))
     st.plotly_chart(px.pie(data, names ='PYTHON-CLASS'))
     ##########################################################
-    data.replace(float('nan'), 0)  # refine the data
+    data.replace(float('nan'), 0)
 
     average = pd.DataFrame(columns=["Session", "Average Score"])
-    for i in range(1, 11): #calculate the average score of each session and add to the average dataframe
+    for i in range(1, 11): 
         average = average.append(
             pd.Series([f"S{i}", round(data[f"S{i}"].mean(), 1)], index=average.columns), 
             ignore_index=True
