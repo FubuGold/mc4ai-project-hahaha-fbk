@@ -1,13 +1,28 @@
 import streamlit as st
 import pandas as pd
+from PersonalInfoManager import ComparePredictReal
+
+@st.cache_data
+def ReadData():
+    return pd.read_csv('py4ai-score.csv')
+
+def PersonalInfoShowcase(Data, UserID):
+    model = ComparePredictReal(Data, Data.iloc[UserID])
+    st.write('Điểm cá nhân')
+    st.table(Data.iloc[UserID])
+    st.write('Dự đoán bằng AI Regression')
+    st.dataframe(model.CompareTable())
 
 def main(): 
     st.set_page_config(layout="wide")
     st.title('Phân tích và xem điểm Python4AI 092022')
-    Data = pd.read_csv('py4ai-score.csv')
+    Data = ReadData()
     PersonalInfoTab, AnalyzeTab, DataTab = st.tabs(['Xem điểm','Phân tích thống kê','Bảng điểm tổng quát'])
+
     with PersonalInfoTab:
-        st.header('Login')
+        placeholder = st.empty()
+        with placeholder.container():
+            PersonalInfoShowcase(Data,105)
         
     with AnalyzeTab:
         st.header('Phân tích dữ liệu')
@@ -18,6 +33,7 @@ def main():
         SubData_Point = Data.drop(['NAME','GENDER','CLASS'],axis='columns').sample(frac=1, random_state=69)
         SubData_Point.reset_index(drop=True)
         st.dataframe(data=SubData_Point, height=1000)
+
 
 
 
