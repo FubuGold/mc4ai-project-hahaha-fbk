@@ -11,7 +11,9 @@ def PersonalInfoShowcase(Data, UserID):
     st.write('Điểm cá nhân')
     st.table(Data.iloc[UserID])
     st.write('Dự đoán bằng AI Regression')
-    st.dataframe(model.CompareTable())
+    st.table(model.CompareTable())
+    st.write("""
+    """)
 
 def main(): 
     st.set_page_config(layout="wide")

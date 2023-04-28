@@ -3,40 +3,54 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_absolute_error as MAE
 
 class UpClassPredict:
-    UpClassPredictModel = LogisticRegression()
+    __UpClassPredictModel = LogisticRegression()
+    score = 0
 
     def __init__(self, data) -> None:
-        self.TrainUpClassPredict(data)
+        self.__TrainUpClassPredict(data)
 
-    def TrainUpClassPredict(self, Data) -> None:
-        X = Data['GPA'].to_numpy().reshape(-1,1)
+    def __TrainUpClassPredict(self, Data) -> None:
+        X = np.append(Data.iloc[:,4:14].isnull()
+                      .to_numpy()
+                      .sum(axis=1)
+                      .reshape(-1,1),
+                      Data['GPA'].fillna(0).to_numpy().reshape(-1,1), axis = 1)
         y = Data['REG-MC4AI'].apply(lambda x: 1 if x == 'Y' else 0)
-        X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.3, random_state=10)
-        self.UpClassPredictModel.fit(X_train,y_train)
+        X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.3, random_state=20)
+        self.__UpClassPredictModel.fit(X_train,y_train)
+
+        self.score = self.__UpClassPredictModel.score(X_test,y_test)
 
     def PredictUpClass(self, pData):
-        pData = pData.loc['GPA'].reshape(-1,1)
-        return self.UpClassPredictModel.predict(pData)[0]
+        if pData['GPA'] == float('nan'): pData['GPA'] = 0
+        pData = np.array([pData.iloc[4:14].isnull().sum(),pData['GPA']]).reshape(1,-1)
+        # print(type(pData))
+        return self.__UpClassPredictModel.predict(pData)[0]
     
 class FinalScorePredict:
-    FinalPredictModel = LinearRegression()
+    __FinalPredictModel = LinearRegression()
+    score = 0
 
     def __init__(self, data) -> None:
-        self.TrainFinalPredict(data)
+        self.__TrainFinalPredict(data)
 
-    def TrainFinalPredict(self, Data) -> None:
+    def __TrainFinalPredict(self, Data) -> None:
         X = np.append(Data.iloc[:, 4:13]
-                            .drop(labels = 'S6', axis = 1 if isinstance(Data, pd.DataFrame) else 0)
+                            .drop(labels = 'S6', axis = 1)
                             .fillna(0)
                             .apply(np.sum, axis = 1)
                             .to_numpy()
                             .reshape(-1,1),
                         Data['S6'].fillna(0).to_numpy().reshape(-1,1), axis = 1)
         y = Data['S10'].fillna(0)
-        X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.3, random_state=10)
-        self.FinalPredictModel.fit(X_train,y_train)
+        X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.3, random_state=30)
+        self.__FinalPredictModel.fit(X_train,y_train)
+
+        self.score = self.__FinalPredictModel.score(X_test,y_test)
+        
 
     def PredictFinal(self, pData):
         pData = np.append(pData.iloc[4:13]
@@ -45,30 +59,33 @@ class FinalScorePredict:
                          .sum()
                          .reshape(-1,1),
                       pData.loc['S6'].reshape(-1,1), axis = 1)
-        return self.FinalPredictModel.predict(pData).round(1)[0]
+        return self.__FinalPredictModel.predict(pData).round(1)[0]
     
 class GPAPredict:
-    GPAPredictModel = LinearRegression()
+    __GPAPredictModel = LinearRegression()
+    score = 0
 
     def __init__(self,Data) -> None:
-        self.TrainGPAPredict(Data)
+        self.__TrainGPAPredict(Data)
     
-    def TrainGPAPredict(self, Data) -> None:
+    def __TrainGPAPredict(self, Data) -> None:
         X = Data[['S6','S10','BONUS']].fillna(0).to_numpy()
         y = Data['GPA'].fillna(0)
         X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.3, random_state=10)
-        self.GPAPredictModel.fit(X=X_train,y=y_train)
+        self.__GPAPredictModel.fit(X_train,y_train)
+        
+        self.score = self.__GPAPredictModel.score(X_test,y_test)
 
     def PredictGPA(self, pData):
         pData = pData[['S6','S10','BONUS']].fillna(0).to_numpy().reshape(1,-1)
-        return self.GPAPredictModel.predict(pData).round(1)[0]
+        return self.__GPAPredictModel.predict(pData).round(1)[0]
     
 
 class ComparePredictReal:
 
     FinalModel = None
-    UpClassModel = None
     GPAModel = None
+    UpClassModel = None
     pData = 0
 
     def __init__(self, Data, pData) -> None:
@@ -81,23 +98,25 @@ class ComparePredictReal:
         Table = pd.DataFrame({
             'Tên':['Điểm cuối kỳ','GPA','Đăng ký MC4AI'],
             'AI':[self.FinalModel.PredictFinal(self.pData), self.GPAModel.PredictGPA(self.pData), self.UpClassModel.PredictUpClass(self.pData)],
-            'Thực tế': self.pData[['S10','GPA','REG-MC4AI']]
+            'Thực tế': self.pData[['S10','GPA','REG-MC4AI']],
+            'Độ chính xác': [self.FinalModel.score, self.GPAModel.score, self.UpClassModel.score]
         })
+        if Table.iloc[2,1] == 1: Table.iloc[2,1] = 'Y'
+        else: Table.iloc[2,1] = ''
         return Table.reset_index(drop=True)
 
     
 
-# def test():
-#     Data = pd.read_csv('py4ai-score.csv')
-#     # model = FinalScorePredict(Data)
-#     # print(model.PredictFinal(Data.iloc[86]))
-#     print(Data.iloc[105])
-#     model = ComparePredictReal(Data,Data.iloc[105])
-#     print(model.CompareTable())
-#     # model = GPAPredict(Data)
-#     # print(model.PredictGPA(Data.iloc[86]))
-#     pass
+def test():
+    Data = pd.read_csv('py4ai-score.csv')
+    # model = FinalScorePredict(Data)
+    # print(model.PredictFinal(Data.iloc[86]))
+    print(Data.iloc[105])
+    model = ComparePredictReal(Data,Data.iloc[105])
+    print(model.CompareTable())
+    # model = GPAPredict(Data)
+    # print(model.PredictGPA(Data.iloc[86]))
 
-# if __name__ == '__main__':
-#     test()
+if __name__ == '__main__':
+    test()
 
