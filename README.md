@@ -9,7 +9,7 @@
 ## Các chức năng chính & kế hoạch thực hiện
 | Chức năng | Người thực hiện | Ngày hoàn thành dự kiến |
 | --------- | --------------- | ----------------------- |
-| Danh sách học sinh | Trần Gia Huy | 25/4/2023 |
+| Danh sách học sinh | Nguyễn Lý Thành Tài | 25/4/2023 |
 | Cá nhân hóa | Trần Gia Huy | 29/4/2023 |
 | Dự đoán thông tin | Trần Gia Huy | 29/4/2023 |
 | Phân tích dữ liệu | Nguyễn Lý Thành Tài | 30/4/2023 |
