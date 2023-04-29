@@ -8,12 +8,12 @@ def ReadData():
 
 def PersonalInfoShowcase(Data, UserID):
     model = ComparePredictReal(Data, Data.iloc[UserID])
-    st.write('Điểm cá nhân')
+    st.markdown('## Điểm cá nhân')
     st.table(Data.iloc[UserID])
-    st.write('Dự đoán bằng AI Regression')
+    st.markdown('## Dự đoán bằng AI Regression')
     st.table(model.CompareTable())
-    st.write("""
-    """)
+    st.markdown("### **Nhận xét:**")
+    st.markdown('Giữa **trung bình điểm homework**, **midterm exam** và **final exam** không có tính liên kết chặt chẽ, thể hiện qua độ chính xác của AI')
 
 def main(): 
     st.set_page_config(layout="wide")
