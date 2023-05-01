@@ -29,6 +29,7 @@ def Login_Personal_Tab(Data):
                     st.error('Username/Password incorrect')
                 else:
                     st.session_state['login'] = pass_mng.GetID()
+                    st.experimental_rerun()
 
     if st.session_state['login'] != None:
         login_container.empty()
