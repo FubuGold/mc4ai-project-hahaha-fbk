@@ -7,7 +7,7 @@ class PasswordManager:
     user = None
 
     def __init__(self) -> None:
-        self.database = mysql.connector.connect(host = st.secrets['host'], user = st.secrets['username'], passwd = st.secrets['password'], database = st.secrets['database'])
+        self.database = mysql.connector.connect(host = st.secrets['host'], user = st.secrets['username'], passwd = st.secrets['password'], database = st.secrets['database'],port = st.secrets['port'])
         self.cursor = self.database.cursor()
 
     def DefaultPassReset(self,Data) -> None:
@@ -72,11 +72,16 @@ class PasswordManager:
 
         
 
-# def test():
-#     usr = input('Username: ')
-#     pwd = input('Password: ')
-#     pwdman = PassManager()
-#     # db = pd.read_csv('py4ai-score.csv')
+def test():
+    # pwdman = PasswordManager()
+    with open('E:\\Gold folder 2\\Project-hahaha-fbk\\mc4ai-project-hahaha-fbk\\.streamlit\\secrets.toml','w') as f:
+        f.write("""dialect = "mysql"
+host = "localhost"
+port = 3307
+database = "ProjectAIpassword_standstick"
+username = "ProjectAIpassword_standstick"
+password = "a0d86f496edcd81329c8cf9125a46d3224347365"
+        """)
 
-# if __name__ == '__main__':
-#     test()
+if __name__ == '__main__':
+    test()
