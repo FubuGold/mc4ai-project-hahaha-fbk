@@ -24,7 +24,7 @@ class PasswordManager:
 
     def CheckInput(self,username,password) -> bool:
         if (not self.ValidateInput(username,password)): return False
-        self.cursor.execute("SELECT * FROM USER WHERE username LIKE %s AND pass LIKE %s",(username,password))
+        self.cursor.execute("SELECT * FROM user WHERE username LIKE %s AND pass LIKE %s",(username,password))
         temp = []
         for x in self.cursor:
             temp.append(x)
