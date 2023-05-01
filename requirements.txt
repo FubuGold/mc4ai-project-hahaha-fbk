@@ -2,5 +2,4 @@ pandas
 numpy
 streamlit
 scikit-learn
-yaml
 mysql.connector == 2.2.9
