@@ -25,7 +25,7 @@ def Login_Personal_Tab(Data):
             pwd = st.text_input('Password',placeholder = 'Please enter your password',max_chars=255)
             login = st.button('Login')
             if login:
-                if (not pass_mng.CheckInput(usr,pwd)):
+                if usr == ' ' or pwd == ' ' or (not pass_mng.CheckInput(usr,pwd)):
                     st.error('Username/Password incorrect')
                 else:
                     st.session_state['login'] = pass_mng.GetID()

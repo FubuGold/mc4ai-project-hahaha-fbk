@@ -3,7 +3,6 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error as MAE
 
 class UpClassPredict:
     __UpClassPredictModel = LogisticRegression()
@@ -86,37 +85,33 @@ class ComparePredictReal:
     FinalModel = None
     GPAModel = None
     UpClassModel = None
-    pData = 0
 
-    def __init__(self, Data, pData) -> None:
-        self.pData = pData
+    def __init__(self, Data) -> None:
         self.FinalModel = FinalScorePredict(Data)
         self.UpClassModel = UpClassPredict(Data)
         self.GPAModel = GPAPredict(Data)
 
-    def CompareTable(self) -> pd.DataFrame():
+    def CompareTable(self,pData) -> pd.DataFrame():
         Table = pd.DataFrame({
             'Tên':['Điểm cuối kỳ','GPA','Đăng ký MC4AI'],
-            'AI':[self.FinalModel.PredictFinal(self.pData), self.GPAModel.PredictGPA(self.pData), self.UpClassModel.PredictUpClass(self.pData)],
-            'Thực tế': self.pData[['S10','GPA','REG-MC4AI']],
+            'AI':[self.FinalModel.PredictFinal(pData), self.GPAModel.PredictGPA(pData), self.UpClassModel.PredictUpClass(pData)],
+            'Thực tế': pData[['S10','GPA','REG-MC4AI']],
             'Độ chính xác': [self.FinalModel.score, self.GPAModel.score, self.UpClassModel.score]
         })
         if Table.iloc[2,1] == 1: Table.iloc[2,1] = 'Y'
         else: Table.iloc[2,1] = ''
         return Table.reset_index(drop=True)
 
-    
+# def test():
+#     Data = pd.read_csv('py4ai-score.csv')
+#     # model = FinalScorePredict(Data)
+#     # print(model.PredictFinal(Data.iloc[86]))
+#     print(Data.iloc[105])
+#     model = ComparePredictReal(Data,Data.iloc[105])
+#     print(model.CompareTable())
+#     # model = GPAPredict(Data)
+#     # print(model.PredictGPA(Data.iloc[86]))
 
-def test():
-    Data = pd.read_csv('py4ai-score.csv')
-    # model = FinalScorePredict(Data)
-    # print(model.PredictFinal(Data.iloc[86]))
-    print(Data.iloc[105])
-    model = ComparePredictReal(Data,Data.iloc[105])
-    print(model.CompareTable())
-    # model = GPAPredict(Data)
-    # print(model.PredictGPA(Data.iloc[86]))
-
-if __name__ == '__main__':
-    test()
+# if __name__ == '__main__':
+#     test()
 
