@@ -59,15 +59,17 @@ class PasswordManager:
         self.database.commit()
         return True
     
-    def PasswordRecover(self,username : str):
-        if (not self.ValidateInput(username,'123456789')): return False
-        self.cursor.execute("SELECT pass FROM user WHERE username like %s",(username,))
-        temp = self.cursor.fetchall()
-        return temp[0][0]
+    # def PasswordRecover(self,username : str):
+    #     if (not self.ValidateInput(username,'123456789')): return False
+    #     self.cursor.execute("SELECT pass FROM user WHERE username like %s",(username,))
+    #     temp = self.cursor.fetchall()
+    #     if temp == []: return None
+    #     return temp[0][0]
     
     def GetID(self):
         self.cursor.execute('SELECT ID FROM user WHERE username like %s',(self.user,))
         temp = self.cursor.fetchall()
+        if temp == []: return None
         return temp[0][0]
     
 
