@@ -6,7 +6,7 @@ import hashlib
 class PasswordManager:
     database = None
     cursor = None
-    user = None
+    user_ID = None
 
     def __init__(self) -> None:
         self.database = mysql.connector.connect(host = st.secrets['host'], user = st.secrets['username'], passwd = st.secrets['password'], database = st.secrets['database'],port = st.secrets['port'])
@@ -35,7 +35,7 @@ class PasswordManager:
         self.cursor.execute("SELECT * FROM user WHERE username LIKE %s AND pass LIKE %s",(username,hash_pwd))
         temp = self.cursor.fetchall()
         if len(temp) == 1:
-            self.user = username
+            self.user_ID = temp[2]
             return True
         else: return False
 
@@ -49,13 +49,13 @@ class PasswordManager:
     def ChangePassword(self, password : str) -> bool:
         if (not self.ValidateInput('temporary',password)): return False
         hash_pwd = self.hashing(password.encode())
-        self.cursor.execute("UPDATE user SET pass = %s WHERE username LIKE %s",(hash_pwd,self.user))
+        self.cursor.execute("UPDATE user SET pass = %s WHERE ID = %s",(hash_pwd,self.user_ID))
         self.database.commit()
         return True
 
     def ChangeUsername(self,username : str) -> bool:
         if (not self.ValidateResetUser(username)): return False
-        self.cursor.execute("UPDATE user SET username = %s WHERE username LIKE %s",(username,self.user))
+        self.cursor.execute("UPDATE user SET username = %s WHERE ID = %s",(username,self.user_ID))
         self.database.commit()
         return True
     
@@ -67,10 +67,11 @@ class PasswordManager:
     #     return temp[0][0]
     
     def GetID(self):
-        self.cursor.execute('SELECT ID FROM user WHERE username like %s',(self.user,))
-        temp = self.cursor.fetchall()
-        if temp == []: return None
-        return temp[0][0]
+        # self.cursor.execute('SELECT ID FROM user WHERE username like %s',(self.user,))
+        # temp = self.cursor.fetchall()
+        # if temp == []: return None
+        # return temp[0][0]
+        return self.user_ID
     
 
 # def test():
