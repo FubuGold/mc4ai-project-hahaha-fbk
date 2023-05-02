@@ -37,10 +37,7 @@ class PasswordManager:
     def ValidateResetUser(self,username : str) -> bool:
         if (not self.ValidateInput(username,'123456789')): return False
         self.cursor.execute("SELECT * FROM user WHERE username LIKE %s",(username,))
-        temp = []
-        for x in self.cursor:
-            temp.append(x)
-        
+        temp = self.cursor.fetchall()
         if len(temp) > 0: return False
         else: return True
 
@@ -59,25 +56,19 @@ class PasswordManager:
     def PasswordRecover(self,username : str):
         if (not self.ValidateInput(username,'123456789')): return False
         self.cursor.execute("SELECT pass FROM user WHERE username like %s",(username,))
-        temp = []
-        for x in self.cursor:
-            temp.append(x)
+        temp = self.cursor.fetchall()
         return temp[0][0]
     
     def GetID(self):
         self.cursor.execute('SELECT ID FROM user WHERE username like %s',(self.user,))
-        temp = []
-        for x in self.cursor:
-            temp.append(x)
+        temp = self.cursor.fetchall()
         return temp[0][0]
     
-
-        
 
 # def test():
 #     Data = pd.read_csv('py4ai-score.csv')
 #     pwdman = PasswordManager()
-#     pwdman.DefaultPassReset(Data)
+
 
 # if __name__ == '__main__':
 #     test()
