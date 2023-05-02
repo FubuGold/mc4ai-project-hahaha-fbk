@@ -35,7 +35,7 @@ class PasswordManager:
         self.cursor.execute("SELECT * FROM user WHERE username LIKE %s AND pass LIKE %s",(username,hash_pwd))
         temp = self.cursor.fetchall()
         if len(temp) == 1:
-            self.user_ID = temp[2]
+            self.user_ID = temp[0][2]
             return True
         else: return False
 
