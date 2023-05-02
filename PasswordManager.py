@@ -1,6 +1,6 @@
 import mysql.connector
 import streamlit as st
-import pandas as pd
+# import pandas as pd
 import hashlib
 
 class PasswordManager:
@@ -9,8 +9,8 @@ class PasswordManager:
     user = None
 
     def __init__(self) -> None:
-        # self.database = mysql.connector.connect(host = st.secrets['host'], user = st.secrets['username'], passwd = st.secrets['password'], database = st.secrets['database'],port = st.secrets['port'])
-        self.database = mysql.connector.connect(host = 'mtv.h.filess.io',user = 'ProjectAIpassword_standstick',passwd = 'dontaskaboutpassword',database = 'ProjectAIpassword_standstick',port = 3307)
+        self.database = mysql.connector.connect(host = st.secrets['host'], user = st.secrets['username'], passwd = st.secrets['password'], database = st.secrets['database'],port = st.secrets['port'])
+        # self.database = mysql.connector.connect(host = 'mtv.h.filess.io',user = 'ProjectAIpassword_standstick',passwd = 'dontaskaboutpassword',database = 'ProjectAIpassword_standstick',port = 3307)
         self.cursor = self.database.cursor()
 
     def hashing(self,val) -> str:
