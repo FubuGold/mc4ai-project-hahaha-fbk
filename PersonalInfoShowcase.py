@@ -16,8 +16,11 @@ def PersonalInfoShowcase(Data,ID):
 def Login_Personal_Tab(Data):
     if 'login' not in st.session_state:
         st.session_state['login'] = None
+    if 'passsowrdrecover' not in st.session_state:
+        st.session_state['passwordrecover'] = None
     pass_mng = PasswordManager()
     login_container = st.empty()
+    pwdrecover_container = st.empty()
     showcase_container = st.empty()
     if st.session_state['login'] == None:
         with login_container.container():
@@ -26,7 +29,7 @@ def Login_Personal_Tab(Data):
             login = st.button('Login')
             if login:
                 if usr == ' ' or pwd == ' ' or (not pass_mng.CheckInput(usr,pwd)):
-                    st.error('Username/Password incorrect')
+                    st.error('Incorrect username/password')
                 else:
                     st.session_state['login'] = pass_mng.GetID()
                     st.experimental_rerun()
@@ -34,11 +37,30 @@ def Login_Personal_Tab(Data):
     if st.session_state['login'] != None:
         login_container.empty()
         with showcase_container.container():
-            logout = st.button('Logout')
-            if logout:
-                st.session_state['login'] = None
-                st.experimental_rerun()
-            PersonalInfoShowcase(Data,st.session_state['login'])
+            showcase,setting = st.tabs(['Xem điểm','Cài đặt'])
+            with showcase:
+                PersonalInfoShowcase(Data,st.session_state['login'])
+            
+            with setting:
+                logout = st.button('Logout')
+                if logout:
+                    st.session_state['login'] = None
+                    st.experimental_rerun()
+                
+                change_usr = st.text_input('Change username',max_chars=255)
+                change_pwd = st.text_input('Change password',max_chars=255)
+                commit = st.button('Commit')
+
+                if commit:
+                    usr_state,pwd_state = None,None
+                    if change_usr != '': usr_state = pass_mng.ChangeUsername(change_usr)
+                    if change_pwd != '': pwd_state = pass_mng.ChangePassword(change_pwd)
+
+                    if usr_state == True: st.success('Successfully changed username')
+                    elif usr_state == False: st.error('Change username failed')
+                    if pwd_state: st.success('Successfully changed password')
+                    elif pwd_state == False: st.error('Change password failed')
+            
 
 
 # def test():
