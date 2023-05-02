@@ -29,7 +29,10 @@ def main():
 
         with col2:
             st.header('Danh sách username/password mặc định')
-            SubData = Data['NAME'] + Data.index.astype(str)
+            SubData = pd.DataFrame({
+                'Username' : Data['NAME'] + Data.index.astype(str),
+                'Password' : ['123456789' for _ in Data.index]
+            })
             st.dataframe(data=SubData, height=1000)
 
 
