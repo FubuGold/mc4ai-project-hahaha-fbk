@@ -9,9 +9,12 @@ class PasswordManager:
     user_ID = None
 
     def __init__(self) -> None:
-        self.database = mysql.connector.connect(host = st.secrets['host'], user = st.secrets['username'], passwd = st.secrets['password'], database = st.secrets['database'],port = st.secrets['port'])
-        # self.database = mysql.connector.connect(host = 'mtv.h.filess.io',user = 'ProjectAIpassword_standstick',passwd = 'dontaskaboutpassword',database = 'ProjectAIpassword_standstick',port = 3307)
+        # self.database = mysql.connector.connect(host = st.secrets['host'], user = st.secrets['username'], passwd = st.secrets['password'], database = st.secrets['database'],port = st.secrets['port'])
+        self.database = mysql.connector.connect(host = 'mtv.h.filess.io',user = 'ProjectAIpassword_standstick',passwd = 'dontaskaboutpassword',database = 'ProjectAIpassword_standstick',port = 3307)
         self.cursor = self.database.cursor()
+
+    def __exit__(self) -> None:
+        self.database.disconnect()
 
     def hashing(self,val) -> str:
         hashing = hashlib.sha512()
@@ -74,15 +77,17 @@ class PasswordManager:
         return self.user_ID
     
 
-# def test():
-#     # Data = pd.read_csv('py4ai-score.csv')
-#     pwdman = PasswordManager()
-#     # pwdman.DefaultPassReset(Data)
-#     # usr = input('Username: ')
-#     # pwd = input('Password: ')
-#     # print(pwdman.CheckInput(usr,pwd))
+def test():
+    # Data = pd.read_csv('py4ai-score.csv')
+    pwdman = PasswordManager()
+
+    usr = input('Username: ')
+    pwd = input('Password: ')
+    print(pwdman.CheckInput(usr,pwd))
+
+    pwdman.ChangeUsername(input('Change username: '))
 
 
 
-# if __name__ == '__main__':
-#     test()
+if __name__ == '__main__':
+    test()
