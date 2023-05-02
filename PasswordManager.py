@@ -16,7 +16,7 @@ class PasswordManager:
         self.cursor.execute("DELETE FROM user")
         for i in Data.index:
             username = Data['NAME'][i] + str(i)
-            self.cursor.execute("INSERT INTO user VALUE (%s,%s,%s)", (username,'123456789',i))
+            self.cursor.execute("INSERT INTO user VALUE (?,?,?)", (username,'123456789',i))
             self.database.commit()
 
     def ValidateInput(self,username : str,password : str) -> bool:
@@ -24,7 +24,7 @@ class PasswordManager:
 
     def CheckInput(self,username,password) -> bool:
         if (not self.ValidateInput(username,password)): return False
-        self.cursor.execute("SELECT * FROM user WHERE username LIKE %s AND pass LIKE %s",(username,password))
+        self.cursor.execute("SELECT * FROM user WHERE username LIKE ? AND pass LIKE ?",(username,password))
         temp = []
         for x in self.cursor:
             temp.append(x)
@@ -36,31 +36,31 @@ class PasswordManager:
 
     def ValidateResetUser(self,username : str) -> bool:
         if (not self.ValidateInput(username,'123456789')): return False
-        self.cursor.execute("SELECT * FROM user WHERE username LIKE %s",(username,))
+        self.cursor.execute("SELECT * FROM user WHERE username LIKE ?",(username,))
         temp = self.cursor.fetchall()
         if len(temp) > 0: return False
         else: return True
 
     def ChangePassword(self, password : str) -> bool:
         if (not self.ValidateInput('temporary',password=password)): return False
-        self.cursor.execute("UPDATE user SET pass = %s WHERE username LIKE %s",(password,self.user))
+        self.cursor.execute("UPDATE user SET pass = ? WHERE username LIKE ?",(password,self.user))
         self.database.commit()
         return True
 
     def ChangeUsername(self,username : str) -> bool:
         if (not self.ValidateResetUser(username)): return False
-        self.cursor.execute("UPDATE user SET username = %s WHERE username LIKE %s",(username,self.user))
+        self.cursor.execute("UPDATE user SET username = ? WHERE username LIKE ?",(username,self.user))
         self.database.commit()
         return True
     
     def PasswordRecover(self,username : str):
         if (not self.ValidateInput(username,'123456789')): return False
-        self.cursor.execute("SELECT pass FROM user WHERE username like %s",(username,))
+        self.cursor.execute("SELECT pass FROM user WHERE username like ?",(username,))
         temp = self.cursor.fetchall()
         return temp[0][0]
     
     def GetID(self):
-        self.cursor.execute('SELECT ID FROM user WHERE username like %s',(self.user,))
+        self.cursor.execute('SELECT ID FROM user WHERE username like ?',(self.user,))
         temp = self.cursor.fetchall()
         return temp[0][0]
     
