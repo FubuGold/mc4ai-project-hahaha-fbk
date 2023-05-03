@@ -37,9 +37,10 @@ def Login_Personal_Tab(Data):
 
     if st.session_state['login'] != None:
         login_container.empty()
+        pass_mng.user_ID = st.session_state['login']
         with showcase_container.container():
             showcase,setting = st.tabs(['Xem điểm','Cài đặt'])
-            
+
             with showcase:
                 PersonalInfoShowcase(Data,st.session_state['login'])
             
@@ -65,10 +66,10 @@ def Login_Personal_Tab(Data):
             
 
 
-# def test():
-#     data = pd.read_csv('py4ai-score.csv')
-#     Login_Personal_Tab(data)
+def test():
+    data = pd.read_csv('py4ai-score.csv')
+    Login_Personal_Tab(data)
 
-# if __name__ == '__main__':
-#     test()
+if __name__ == '__main__':
+    test()
         

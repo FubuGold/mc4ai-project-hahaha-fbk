@@ -68,18 +68,18 @@ class PasswordManager:
         return True
     
 
-def test():
-    # Data = pd.read_csv('py4ai-score.csv')
-    pwdman = PasswordManager()
-    # with pwdman:
-        # pwdman.DefaultPassReset(Data)
-    usr = input('Username: ')
-    pwd = input('Password: ')
-    if pwdman.CheckInput(usr,pwd):
-        print('Logined')
-        pwdman.ChangePassword(input('Change password: '))
+# def test():
+#     # Data = pd.read_csv('py4ai-score.csv')
+#     pwdman = PasswordManager()
+#     # with pwdman:
+#         # pwdman.DefaultPassReset(Data)
+#     usr = input('Username: ')
+#     pwd = input('Password: ')
+#     if pwdman.CheckInput(usr,pwd):
+#         print('Logined')
+#         pwdman.ChangePassword(input('Change password: '))
 
 
 
-if __name__ == '__main__':
-    test()
+# if __name__ == '__main__':
+#     test()
