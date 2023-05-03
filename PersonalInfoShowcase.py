@@ -22,6 +22,7 @@ def Login_Personal_Tab(Data):
     login_container = st.empty()
     pwdrecover_container = st.empty()
     showcase_container = st.empty()
+
     if st.session_state['login'] == None:
         with login_container.container():
             usr = st.text_input('Username',placeholder = 'Please enter your username',max_chars=255)
@@ -31,13 +32,14 @@ def Login_Personal_Tab(Data):
                 if usr == ' ' or pwd == ' ' or (not pass_mng.CheckInput(usr,pwd)):
                     st.error('Incorrect username/password')
                 else:
-                    st.session_state['login'] = pass_mng.GetID()
+                    st.session_state['login'] = pass_mng.user_ID
                     st.experimental_rerun()
 
     if st.session_state['login'] != None:
         login_container.empty()
         with showcase_container.container():
             showcase,setting = st.tabs(['Xem điểm','Cài đặt'])
+            
             with showcase:
                 PersonalInfoShowcase(Data,st.session_state['login'])
             
