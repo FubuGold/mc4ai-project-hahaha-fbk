@@ -11,10 +11,8 @@ class PasswordManager:
         # self.database = mysql.connector.connect(host = st.secrets['host'], user = st.secrets['username'], passwd = st.secrets['password'], database = st.secrets['database'],port = st.secrets['port'])
         # self.database = mysql.connector.connect(host = 'mtv.h.filess.io',user = 'ProjectAIpassword_standstick',passwd = 'dontaskaboutpassword',database = 'ProjectAIpassword_standstick',port = 3307)
         # self.cursor = self.database.cursor()
-        # url = st.secrets['connect_supabase']['url']
-        # key = st.secrets['connect_supabase']['key']
-        url = "https://ransvclhkscfkexttzdz.supabase.co"
-        key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhbnN2Y2xoa3NjZmtleHR0emR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODMwMzU2NTQsImV4cCI6MTk5ODYxMTY1NH0.DR0ZxeTjINgYLM5ohE_PAfQuRar-pJwf72SfLfwF0zo"
+        url = st.secrets['connect_supabase']['url']
+        key = st.secrets['connect_supabase']['key']
         self.cursor = create_client(url,key)
 
     # def __enter__(self):
