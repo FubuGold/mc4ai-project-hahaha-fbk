@@ -1,20 +1,30 @@
-import mysql.connector
+from supabase import create_client
 import streamlit as st
-# import pandas as pd
+import pandas as pd
 import hashlib
 
 class PasswordManager:
-    database = None
     cursor = None
     user_ID = None
 
     def __init__(self) -> None:
         # self.database = mysql.connector.connect(host = st.secrets['host'], user = st.secrets['username'], passwd = st.secrets['password'], database = st.secrets['database'],port = st.secrets['port'])
-        self.database = mysql.connector.connect(host = 'mtv.h.filess.io',user = 'ProjectAIpassword_standstick',passwd = 'dontaskaboutpassword',database = 'ProjectAIpassword_standstick',port = 3307)
-        self.cursor = self.database.cursor()
+        # self.database = mysql.connector.connect(host = 'mtv.h.filess.io',user = 'ProjectAIpassword_standstick',passwd = 'dontaskaboutpassword',database = 'ProjectAIpassword_standstick',port = 3307)
+        # self.cursor = self.database.cursor()
+        # url = st.secrets['connect_supabase']['url']
+        # key = st.secrets['connect_supabase']['key']
+        url = "https://ransvclhkscfkexttzdz.supabase.co"
+        key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhbnN2Y2xoa3NjZmtleHR0emR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODMwMzU2NTQsImV4cCI6MTk5ODYxMTY1NH0.DR0ZxeTjINgYLM5ohE_PAfQuRar-pJwf72SfLfwF0zo"
+        self.cursor = create_client(url,key)
 
-    def __exit__(self) -> None:
-        self.database.disconnect()
+    # def __enter__(self):
+    #     email = st.secrets['user_info']['email']
+    #     password = st.secrets['user_info']['password']
+    #     self.cursor.auth.sign_in_with_password({"email":email, "password" : password})
+        
+    # def __exit__(self,*arg):
+    #     self.cursor.auth.sign_out()
+    
 
     def hashing(self,val) -> str:
         hashing = hashlib.sha512()
@@ -22,12 +32,13 @@ class PasswordManager:
         return hashing.hexdigest()
 
     def DefaultPassReset(self,Data) -> None:
-        self.cursor.execute("DELETE FROM user")
+        # user = self.cursor.auth.get_user()
+        # print(user)
+        self.cursor.table("user").delete()
         hash_pwd = self.hashing('123456789'.encode())
         for i in Data.index:
             username = Data['NAME'][i] + str(i)
-            self.cursor.execute("INSERT INTO user VALUE (%s,%s,%s)", (username,hash_pwd,i))
-            self.database.commit()
+            self.cursor.table("user").insert({'username':username,'pass':hash_pwd,'id':i}).execute()
 
     def ValidateInput(self,username : str,password : str) -> bool:
         return username.find(' ') == -1 and username.find("'") == -1 and password.find(' ') == -1 and password.find("'") == -1
@@ -35,57 +46,40 @@ class PasswordManager:
     def CheckInput(self,username : str,password :str) -> bool:
         if (not self.ValidateInput(username,password)): return False
         hash_pwd = self.hashing(password.encode())
-        self.cursor.execute("SELECT * FROM user WHERE username LIKE %s AND pass LIKE %s",(username,hash_pwd))
-        temp = self.cursor.fetchall()
-        if len(temp) == 1:
-            self.user_ID = temp[0][2]
+        temp = self.cursor.table("user").select("*",count='exact').match({"username":username, "pass":hash_pwd}).execute()
+        if temp.count == 1:
+            self.user_ID = temp.data[0]['id']
             return True
         else: return False
 
     def ValidateResetUser(self,username : str) -> bool:
         if (not self.ValidateInput(username,'123456789')): return False
-        self.cursor.execute("SELECT * FROM user WHERE username LIKE %s",(username,))
-        temp = self.cursor.fetchall()
-        if len(temp) > 0: return False
+        temp = self.cursor.table("user").select("*",count='exact').eq("username",username).execute().count
+        if temp > 0: return False
         else: return True
 
     def ChangePassword(self, password : str) -> bool:
         if (not self.ValidateInput('temporary',password)): return False
         hash_pwd = self.hashing(password.encode())
-        self.cursor.execute("UPDATE user SET pass = %s WHERE ID = %s",(hash_pwd,self.user_ID))
-        self.database.commit()
+        self.cursor.table("user").update({"pass":hash_pwd}).eq("id",self.user_ID).execute()
         return True
 
     def ChangeUsername(self,username : str) -> bool:
         if (not self.ValidateResetUser(username)): return False
-        self.cursor.execute("UPDATE user SET username = %s WHERE ID = %s",(username,self.user_ID))
-        self.database.commit()
+        self.cursor.table("user").update({"username":username}).eq("id",self.user_ID).execute()
         return True
-    
-    # def PasswordRecover(self,username : str):
-    #     if (not self.ValidateInput(username,'123456789')): return False
-    #     self.cursor.execute("SELECT pass FROM user WHERE username like %s",(username,))
-    #     temp = self.cursor.fetchall()
-    #     if temp == []: return None
-    #     return temp[0][0]
-    
-    def GetID(self):
-        # self.cursor.execute('SELECT ID FROM user WHERE username like %s',(self.user,))
-        # temp = self.cursor.fetchall()
-        # if temp == []: return None
-        # return temp[0][0]
-        return self.user_ID
     
 
 def test():
     # Data = pd.read_csv('py4ai-score.csv')
     pwdman = PasswordManager()
-
+    # with pwdman:
+        # pwdman.DefaultPassReset(Data)
     usr = input('Username: ')
     pwd = input('Password: ')
-    print(pwdman.CheckInput(usr,pwd))
-
-    pwdman.ChangeUsername(input('Change username: '))
+    if pwdman.CheckInput(usr,pwd):
+        print('Logined')
+        pwdman.ChangePassword(input('Change password: '))
 
 
 
