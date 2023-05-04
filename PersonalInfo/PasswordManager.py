@@ -8,21 +8,9 @@ class PasswordManager:
     user_ID = None
 
     def __init__(self) -> None:
-        # self.database = mysql.connector.connect(host = st.secrets['host'], user = st.secrets['username'], passwd = st.secrets['password'], database = st.secrets['database'],port = st.secrets['port'])
-        # self.database = mysql.connector.connect(host = 'mtv.h.filess.io',user = 'ProjectAIpassword_standstick',passwd = 'dontaskaboutpassword',database = 'ProjectAIpassword_standstick',port = 3307)
-        # self.cursor = self.database.cursor()
         url = st.secrets['connect_supabase']['url']
         key = st.secrets['connect_supabase']['key']
         self.cursor = create_client(url,key)
-
-    # def __enter__(self):
-    #     email = st.secrets['user_info']['email']
-    #     password = st.secrets['user_info']['password']
-    #     self.cursor.auth.sign_in_with_password({"email":email, "password" : password})
-        
-    # def __exit__(self,*arg):
-    #     self.cursor.auth.sign_out()
-    
 
     def hashing(self,val) -> str:
         hashing = hashlib.sha512()

@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from PersonalInfoShowcase import Login_Personal_Tab
+from PersonalInfo.PersonalInfoShowcase import Login_Personal_Tab
 
 @st.cache_data
 def ReadData():
