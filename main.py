@@ -6,6 +6,13 @@ from PersonalInfo.PersonalInfoShowcase import Login_Personal_Tab
 def ReadData():
     return pd.read_csv('py4ai-score.csv')
 
+@st.cache_data
+def SubDataPass(Data):
+    return pd.DataFrame({
+                'Username' : Data['NAME'] + Data.index.astype(str),
+                'Password' : ['123456789' for _ in Data.index]
+            })
+
 def main(): 
     st.set_page_config(layout="wide")
     st.title('Phân tích và xem điểm Python4AI 092022')
@@ -29,11 +36,14 @@ def main():
 
         with col2:
             st.header('Danh sách username/password mặc định')
-            SubData = pd.DataFrame({
-                'Username' : Data['NAME'] + Data.index.astype(str),
-                'Password' : ['123456789' for _ in Data.index]
-            })
-            st.dataframe(data=SubData, height=1000)
+            search = st.text_input(label='Tìm kiếm tên',placeholder='VD:nguyenvana')
+            search_button = st.button('Tìm kiếm')
+            SubData = SubDataPass(Data)
+            if search_button:
+                if search == '':
+                    st.dataframe(data=SubData, height=1000)
+                else:
+                    st.dataframe(data=SubData.loc[SubData['Username'].str.contains(search)])
 
 
 if __name__ == '__main__':
