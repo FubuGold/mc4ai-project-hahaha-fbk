@@ -26,7 +26,7 @@ def Login_Personal_Tab(Data):
     if st.session_state['login'] == None:
         with login_container.container():
             usr = st.text_input('Username',placeholder = 'Please enter your username',max_chars=255)
-            pwd = st.text_input('Password',placeholder = 'Please enter your password',max_chars=255)
+            pwd = st.text_input('Password',placeholder = 'Please enter your password',max_chars=255, type = 'password')
             login = st.button('Login')
             if login:
                 if usr == ' ' or pwd == ' ' or (not pass_mng.CheckInput(usr,pwd)):
