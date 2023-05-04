@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from haha import *
+from huhu import *
 def main(): 
     Data = pd.read_csv('py4ai-score.csv')
     Data.drop(['NAME','CLASS'],axis='columns',inplace=True)
@@ -12,6 +13,7 @@ def main():
     with AnalyzeTab:
         st.header('Phân tích dữ liệu')
         analyze(Data)
+        classify(Data, 3)
     with DataTab:
         st.dataframe(data=Data, height=1000)
 
