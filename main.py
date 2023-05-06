@@ -13,8 +13,12 @@ def main():
     with AnalyzeTab:
         st.header('Phân tích dữ liệu')
         analyze(Data)
-        classify(Data, 3)
+        classify(Data, 4)
     with DataTab:
+        for i in range(1,11):
+            Data[f"S{i}"].fillna(0, inplace = True)
+        Data["BONUS"].fillna(0, inplace = True)
+        Data["REG-MC4AI"].fillna("N", inplace = True)
         st.dataframe(data=Data, height=1000)
 
 if __name__ == '__main__':
