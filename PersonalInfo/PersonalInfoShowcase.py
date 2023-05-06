@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from PersonalInfo.PersonalInfoManager import ComparePredictReal
-from PersonalInfo.PasswordManager import PasswordManager
+from PersonalInfo.PasswordLogin.PasswordManager import PasswordManager
 
 def PersonalInfoShowcase(Data,ID):
     model = ComparePredictReal(Data)

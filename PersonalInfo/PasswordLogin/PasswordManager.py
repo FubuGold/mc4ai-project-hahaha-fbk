@@ -27,7 +27,7 @@ class PasswordManager:
             self.cursor.table("user").insert({'username':username,'pass':hash_pwd,'id':i}).execute()
 
     def ValidateInput(self,username : str,password : str) -> bool:
-        return username.find(' ') == -1 and username.find("'") == -1 and password.find(' ') == -1 and password.find("'") == -1
+        return username.find(' ') == -1 and username.find("'") == -1 and username.find('=') == -1 and  password.find(' ') == -1 and password.find("'") == -1 and password.find('=') == -1
 
     def CheckInput(self,username : str,password :str) -> bool:
         if (not self.ValidateInput(username,password)): return False
