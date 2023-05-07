@@ -1,4 +1,5 @@
 pandas
+cmake
 numpy
 streamlit
 scikit-learn
@@ -6,4 +7,3 @@ mysql.connector == 2.2.9
 supabase == 1.0.3
 face-recognition
 opencv-python
-cmake
