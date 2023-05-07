@@ -14,13 +14,13 @@ class AIFaceReg:
     known_id = []
     
     def __init__(self) -> None:
-        # url = st.secrets['connect-supabase']['url']
-        # key = st.secrets['connect-supabase']['key']
-        url = "https://ransvclhkscfkexttzdz.supabase.co"
-        key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhbnN2Y2xoa3NjZmtleHR0emR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODMwMzU2NTQsImV4cCI6MTk5ODYxMTY1NH0.DR0ZxeTjINgYLM5ohE_PAfQuRar-pJwf72SfLfwF0zo"
+        url = st.secrets['connect-supabase']['url']
+        key = st.secrets['connect-supabase']['key']
+        # url = "https://ransvclhkscfkexttzdz.supabase.co"
+        # key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhbnN2Y2xoa3NjZmtleHR0emR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODMwMzU2NTQsImV4cCI6MTk5ODYxMTY1NH0.DR0ZxeTjINgYLM5ohE_PAfQuRar-pJwf72SfLfwF0zo"
         self.cursor = create_client(url,key)
 
-    def FetchDataFromStorage(self) -> None:
+    def FetchData(self) -> None:
         file_list = self.cursor.storage.from_('face_reg_database').list(self.bucket_path)
         st.write(file_list)
         for file in file_list:
@@ -88,23 +88,19 @@ class AIFaceReg:
         return self.known_id[res]
 
 
-
-
-
-def test():
-    model = AIFaceReg()
-
-    model.UpdateStorage()
-    model.FetchDataFromStorage()
-    st.write(model.known_id)
-    img_buffer_file = st.camera_input('Check input')
-    res = model.CompareInput(img_buffer=img_buffer_file)
-    st.write(res)
-    st.write(model.known_id)
-    st.write(model.known_encoding)
-    if st.button('Clear Cache'):
-        model.ClearCache()
+# def test():
+#     model = AIFaceReg()
+#     model.UpdateStorage()
+#     model.FetchDataFromStorage()
+#     st.write(model.known_id)
+#     img_buffer_file = st.camera_input('Check input')
+#     res = model.CompareInput(img_buffer=img_buffer_file)
+#     st.write(res)
+#     st.write(model.known_id)
+#     st.write(model.known_encoding)
+#     if st.button('Clear Cache'):
+#         model.ClearCache()
     
 
-if __name__ == '__main__':
-    test()
+# if __name__ == '__main__':
+#     test()
