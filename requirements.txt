@@ -1,7 +1,0 @@
-pandas
-face-recognition
-numpy
-streamlit
-scikit-learn
-supabase == 1.0.3
-opencv-python
