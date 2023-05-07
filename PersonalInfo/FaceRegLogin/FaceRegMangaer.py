@@ -1,10 +1,10 @@
 import os
 import io
+import cv2
 import numpy as np
 import streamlit as st
 import face_recognition as fr
 from supabase import create_client
-from PIL import Image
 
 class AIFaceReg:
     
@@ -24,8 +24,9 @@ class AIFaceReg:
         file_list = self.cursor.storage.from_('face_reg_database').list(self.bucket_path)
         for file in file_list:
             if file['name'].endswith('.jpeg'):
-                img_file = self.cursor.storage.from_('face_reg_database').download(f'{self.bucket_path}/{file["name"]}')
-                img_file = Image.open(io.BytesIO(img_file))
+                img_file_byte = self.cursor.storage.from_('face_reg_database').download(f'{self.bucket_path}/{file["name"]}')
+                img_file = cv2.imdecode(np.frombuffer(img_file_byte, np.uint8), cv2.IMREAD_COLOR)
+
                 tmp_encoding = fr.face_encodings(img_file)[0]
                 self.known_encoding.append(tmp_encoding)
                 self.known_id.append(int(file['name'].replace('.jpeg','')))
@@ -33,16 +34,20 @@ class AIFaceReg:
     def QueueUpdate(self,img_buffer,id) -> tuple:
         try:
             if img_buffer is None: return (False,'')
+
             img_path = f'{self.folder_path}/{id}.jpeg'
-            img = Image.open(img_buffer)
-            face_loc = fr.face_locations(img)
+            img_file_byte = img_buffer.getvalue()
+            img_file = cv2.imdecode(np.frombuffer(img_file_byte, np.uint8), cv2.IMREAD_COLOR)
+
+            face_loc = fr.face_locations(img_file)
             if len(face_loc) == 0:
                 return (False,'Không nhận khuôn mặt')
             elif len(face_loc) > 1:
                 return (False,'Có nhiều hơn 1 khuôn mặt')
+            
             if os.path.isfile(img_path):
                 os.remove(img_path)
-            img.save(img_path)
+            cv2.imwrite(img_path,img_file)
             return (True,'Thành công')
         except:
             return (False,'Đã xảy ra lỗi. Vui lòng thử lại')
@@ -54,13 +59,18 @@ class AIFaceReg:
             self.cursor.storage.from_('face_reg_database').upload(self.bucket_path,img_path)
 
     def CompareInput(self,img_buffer) -> int:
-        img = Image.open(img_buffer)
-        face_loc = fr.face_locations(img)
+        if img_buffer is None: return -1
+        img_file_byte = img_buffer.getvalue()
+        img_file = cv2.imdecode(np.frombuffer(img_file_byte, np.uint8), cv2.IMREAD_COLOR)
+        face_loc = fr.face_locations(img_file)
         if len(face_loc) == 0:
             return -1
         elif len(face_loc) > 1:
             return -2
-        unknown_encoding = fr.face_encodings(img)[0]
+        unknown_encoding = fr.face_encodings(img_file)[0]
+        res = fr.face_distance(self.known_encoding,unknown_encoding).argmin()
+        return self.known_id[res]
+
 
 
 
@@ -68,6 +78,11 @@ class AIFaceReg:
 def test():
     model = AIFaceReg()
     model.FetchDataFromStorage()
+    st.write(model.known_id)
+    img_buffer_file = st.camera_input('Check input')
+    res = model.CompareInput(img_buffer=img_buffer_file)
+    st.write(res)
+    
 
 if __name__ == '__main__':
     test()
