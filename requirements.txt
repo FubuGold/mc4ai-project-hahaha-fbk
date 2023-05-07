@@ -1,5 +1,5 @@
-cmake
 pandas
+cmake
 face-recognition
 numpy
 streamlit
