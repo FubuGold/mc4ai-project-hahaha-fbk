@@ -67,6 +67,8 @@ def Login_Personal_Tab(Data):
             with setting:
                 logout = st.button('Logout')
                 if logout:
+                    face_mng.UpdateStorage()
+                    face_mng.ClearCache()
                     st.session_state['login'] = None
                     st.experimental_rerun()
                 
@@ -92,14 +94,11 @@ def Login_Personal_Tab(Data):
                 elif res[1] != '':
                     st.error(res[1])
 
-                
-            
 
+# def test():
+#     data = pd.read_csv('py4ai-score.csv')
+#     Login_Personal_Tab(data)
 
-def test():
-    data = pd.read_csv('py4ai-score.csv')
-    Login_Personal_Tab(data)
-
-if __name__ == '__main__':
-    test()
+# if __name__ == '__main__':
+#     test()
         

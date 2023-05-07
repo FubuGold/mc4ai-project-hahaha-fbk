@@ -18,8 +18,6 @@ class PasswordManager:
         return hashing.hexdigest()
 
     def DefaultPassReset(self,Data) -> None:
-        # user = self.cursor.auth.get_user()
-        # print(user)
         self.cursor.table("user").delete()
         hash_pwd = self.hashing('123456789'.encode())
         for i in Data.index:
