@@ -60,6 +60,7 @@ def Login_Personal_Tab(Data):
     if st.session_state['login'] != None:
         login_container.empty()
         pass_mng.user_ID = st.session_state['login']
+        st.session_state['face-activation'] = False
         with showcase_container.container():
             showcase,setting = st.tabs(['Xem điểm','Cài đặt'])
 
@@ -88,7 +89,8 @@ def Login_Personal_Tab(Data):
 
                 
                 st.write('Cập nhập đăng nhập bằng khuôn mặt')
-                if st.button('Đăng ký đăng nhập bằng khuôn mặt'):
+                st.session_state['face-activate'] = st.checkbox('Đăng nhập bằng khuôn mặt',value=False)
+                if st.session_state['face-activate']:
                     img_buffer = st.camera_input('Chụp hình khuôn mặt')
                     if st.button('Xác nhận'):
                         res = face_mng.Update(img_buffer,st.session_state['login'])
