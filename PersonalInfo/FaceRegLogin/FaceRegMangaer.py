@@ -11,7 +11,7 @@ class AIFaceReg:
     folder_path = os.path.join(os.path.dirname(__file__),'PersonalInfo/FaceRegLogin/cacheimage')
     def CheckFile(self):
         for file_name in os.path.dirname(__file__):
-            st.write(file_name)
+            print(file_name)
     bucket_path = 'face_reg_database/FaceImage'
     known_encoding = []
     known_id = []
