@@ -71,7 +71,7 @@ def Login_Personal_Tab(Data):
                 face_mng.CheckFile()
                 logout = st.button('Logout')
                 if logout:
-                    face_mng.UpdateStorage()
+                    face_mng.UpdateStorage(st.session_state['login'])
                     face_mng.ClearCache()
                     st.session_state['login'] = None
                     st.experimental_rerun()

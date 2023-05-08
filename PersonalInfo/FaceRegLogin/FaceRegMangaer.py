@@ -56,19 +56,19 @@ class AIFaceReg:
         except:
             return (False,'Đã xảy ra lỗi. Vui lòng thử lại')
         
-    def UpdateStorage(self) -> None:
-        img_name_list = os.listdir(self.folder_path)
+    def UpdateStorage(self,id) -> None:
+        img_file_name = f'{id}.jpg'
+        img_path = f'{self.folder_path}/{img_file_name}'
+        img_save_path = f'{self.bucket_path}/{id}.jpg'
+
         _bucket_file_list = self.cursor.storage.from_('face_reg_database').list(self.bucket_path)
         _bucket_file_list = [file['name'] for file in _bucket_file_list]
-        for img_name in img_name_list:
-            img_path = f'{self.folder_path}/{img_name}'
-            img_save_path = f'{self.bucket_path}/{img_name}'
 
-            if img_name in _bucket_file_list: # Remove if exist
-                self.cursor.storage.from_('face_reg_database').remove(img_save_path)
-            
-            self.cursor.storage.from_('face_reg_database').upload(img_save_path,img_path,
-                                                                {"content-type": "image/jpg"})
+        if img_file_name in _bucket_file_list: # Remove if exist
+            self.cursor.storage.from_('face_reg_database').remove(img_save_path)
+        
+        self.cursor.storage.from_('face_reg_database').upload(img_save_path,img_path,
+                                                            {"content-type": "image/jpg"})
 
     def ClearCache(self) -> None:
         img_name_list = os.listdir(self.folder_path)
