@@ -17,17 +17,15 @@ def PersonalInfoShowcase(Data,ID):
 def Login_Personal_Tab(Data):
     if 'login' not in st.session_state:
         st.session_state['login'] = None
-    if 'login-activate' not in st.session_state:
-        st.session_state['face-activate'] = False
-
     pass_mng = PasswordManager()
     face_mng = AIFaceReg()
     login_container = st.empty()
+    pwdrecover_container = st.empty()
     showcase_container = st.empty()
 
     if st.session_state['login'] == None:
         with login_container.container():
-            password_tab, face_tab = st.tabs(['Đăng nhập bằng password','Đăng nhập bằng khuôn mặt'])
+            password_tab, face_tab = st.tabs(['Đăng nhập bằng password','Đăng nhập '])
 
             with password_tab:
                 usr = st.text_input('Username',max_chars=255)
@@ -41,8 +39,7 @@ def Login_Personal_Tab(Data):
                         st.experimental_rerun()
             
             with face_tab:
-                st.session_state['face-activate'] = st.checkbox('Đăng nhập bằng khuôn mặt',value=False)
-                if st.session_state['face-activate']:
+                if st.button('Đăng nhập bằng khuôn mặt'):
                     face_mng.FetchData()
                     img_buffer = st.camera_input('Chụp ảnh khuôn mặt',help='Trong khung hình chỉ có 1 khuôn mặt')
                     res = face_mng.CompareInput(img_buffer)
@@ -70,6 +67,8 @@ def Login_Personal_Tab(Data):
             with setting:
                 logout = st.button('Logout')
                 if logout:
+                    face_mng.UpdateStorage()
+                    face_mng.ClearCache()
                     st.session_state['login'] = None
                     st.experimental_rerun()
                 
@@ -87,10 +86,8 @@ def Login_Personal_Tab(Data):
                     if pwd_state: st.success('Successfully changed password')
                     elif pwd_state == False: st.error('Change password failed')
 
-                
                 st.write('Cập nhập đăng nhập bằng khuôn mặt')
-                st.session_state['face-activate'] = st.checkbox('Đăng nhập bằng khuôn mặt',value=False)
-                if st.session_state['face-activate']:
+                if st.button('Đăng ký đăng nhập bằng khuôn mặt'):
                     img_buffer = st.camera_input('Chụp hình khuôn mặt')
                     if st.button('Xác nhận'):
                         res = face_mng.Update(img_buffer,st.session_state['login'])
