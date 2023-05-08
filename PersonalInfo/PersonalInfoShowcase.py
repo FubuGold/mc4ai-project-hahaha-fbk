@@ -17,6 +17,8 @@ def PersonalInfoShowcase(Data,ID):
 def Login_Personal_Tab(Data):
     if 'login' not in st.session_state:
         st.session_state['login'] = None
+    if 'passsowrdrecover' not in st.session_state:
+        st.session_state['passwordrecover'] = None
     pass_mng = PasswordManager()
     face_mng = AIFaceReg()
     login_container = st.empty()
@@ -39,20 +41,19 @@ def Login_Personal_Tab(Data):
                         st.experimental_rerun()
             
             with face_tab:
-                if st.button('Đăng nhập bằng khuôn mặt'):
-                    face_mng.FetchData()
-                    img_buffer = st.camera_input('Chụp ảnh khuôn mặt',help='Trong khung hình chỉ có 1 khuôn mặt')
-                    res = face_mng.CompareInput(img_buffer)
-                    if res == -1 and img_buffer is not None:
-                        st.error("Không nhận thấy khuôn mặt")
-                    elif res == -2:
-                        st.error("Hơm 1 khuôn mặt trong ảnh")
-                    elif res != -1:
-                        st.write(f'Số thứ tự của bạn có phải là {res} không ? (Kiểm tra tại Danh sách điểm)')
-                        st.write(f'Nếu không xin hãy thử lại')
-                        if st.button('Xác nhận'):
-                            st.session_state['login'] = res
-                            st.experimental_rerun()
+                face_mng.FetchData()
+                img_buffer = st.camera_input('Chụp ảnh khuôn mặt',help='Trong khung hình chỉ có 1 khuôn mặt')
+                res = face_mng.CompareInput(img_buffer)
+                if res == -1 and img_buffer is not None:
+                    st.error("Không nhận thấy khuôn mặt")
+                elif res == -2:
+                    st.error("Hơm 1 khuôn mặt trong ảnh")
+                else:
+                    st.write(f'Số thứ tự của bạn có phải là {res} không ? (Kiểm tra tại Danh sách điểm)')
+                    st.write(f'Nếu không xin hãy thử lại')
+                    if st.button('Xác nhận'):
+                        st.session_state['login'] = res
+                        st.experimental_rerun()
 
     if st.session_state['login'] != None:
         login_container.empty()
@@ -87,14 +88,12 @@ def Login_Personal_Tab(Data):
                     elif pwd_state == False: st.error('Change password failed')
 
                 st.write('Cập nhập đăng nhập bằng khuôn mặt')
-                if st.button('Đăng ký đăng nhập bằng khuôn mặt'):
-                    img_buffer = st.camera_input('Chụp hình khuôn mặt')
-                    if st.button('Xác nhận'):
-                        res = face_mng.Update(img_buffer,st.session_state['login'])
-                        if res[0] == True:
-                            st.success('Đăng kí thành công')
-                        elif res[1] != '':
-                            st.error(res[1])
+                img_buffer = st.camera_input('Chụp hình khuôn mặt')
+                res = face_mng.QueueUpdate(img_buffer,st.session_state['login'])
+                if res[0] == True:
+                    st.success('Đăng kí thành công')
+                elif res[1] != '':
+                    st.error(res[1])
 
 
 # def test():
