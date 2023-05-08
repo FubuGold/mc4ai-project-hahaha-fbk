@@ -8,13 +8,8 @@ from supabase import create_client
 
 class AIFaceReg:
     
-    folder_path = os.path.dirname(os.path.realpath(__file__)) + '/PersonalInfo/FaceRegLogin/cacheimage'
-    def CheckFile(self):
-        name = []
-        for file_name in os.path.dirname(__file__):
-            name.append(file_name)
-        st.write(name)
-    bucket_path = 'face_reg_database/FaceImage'
+    folder_path = os.path.dirname(os.path.realpath(__file__)) + '\PersonalInfo\FaceRegLogin\cacheimage'
+    bucket_path = 'face_reg_database\FaceImage'
     known_encoding = []
     known_id = []
     
