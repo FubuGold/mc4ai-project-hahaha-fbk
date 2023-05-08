@@ -1,5 +1,4 @@
 import os
-import io
 import cv2
 import numpy as np
 import streamlit as st
@@ -8,7 +7,6 @@ from supabase import create_client
 
 class AIFaceReg:
     
-    folder_path = os.path.join(os.path.curdir,'PersonalInfo/FaceRegLogin/cacheimage')
     bucket_path = 'face_reg_database/FaceImage'
     known_encoding = []
     known_id = []
@@ -30,11 +28,10 @@ class AIFaceReg:
                 self.known_encoding.append(tmp_encoding)
                 self.known_id.append(int(file['name'].replace('.jpg','')))
 
-    def QueueUpdate(self,img_buffer,id) -> tuple:
+    def Update(self,img_buffer,id) -> tuple:
         try:
             if img_buffer is None: return (False,'')
 
-            img_path = f'{self.folder_path}/{id}.jpg'
             img_file_byte = img_buffer.getvalue()
             img_file = cv2.imdecode(np.frombuffer(img_file_byte, np.uint8), cv2.IMREAD_COLOR)
 
@@ -43,34 +40,24 @@ class AIFaceReg:
                 return (False,'Không nhận khuôn mặt')
             elif len(face_loc) > 1:
                 return (False,'Có nhiều hơn 1 khuôn mặt')
-            
-            if os.path.isfile(img_path):
-                os.remove(img_path)
-            cv2.imwrite(img_path,img_file)
+            self.UpdateStorage(img_file,id)
             return (True,'Thành công')
         except:
             return (False,'Đã xảy ra lỗi. Vui lòng thử lại')
         
-    def UpdateStorage(self) -> None:
-        img_name_list = os.listdir(self.folder_path)
+    def UpdateStorage(self,img_file,id) -> bool:
         _bucket_file_list = self.cursor.storage.from_('face_reg_database').list(self.bucket_path)
         _bucket_file_list = [file['name'] for file in _bucket_file_list]
-        for img_name in img_name_list:
-            img_path = f'{self.folder_path}/{img_name}'
-            img_save_path = f'{self.bucket_path}/{img_name}'
 
-            if img_name in _bucket_file_list: # Remove if exist
-                self.cursor.storage.from_('face_reg_database').remove(img_save_path)
-            
-            self.cursor.storage.from_('face_reg_database').upload(img_save_path,img_path,
-                                                                {"content-type": "image/jpg"})
+        img_name = f'{id}.jpg'
 
+        img_save_path = f'{self.bucket_path}/{img_name}'
 
-    def ClearCache(self) -> None:
-        img_name_list = os.listdir(self.folder_path)
-        for img_name in img_name_list:
-            img_path = f'{self.folder_path}/{img_name}'
-            os.remove(img_path)
+        if img_name in _bucket_file_list: # Remove if exist
+            self.cursor.storage.from_('face_reg_database').remove(img_save_path)
+        
+        self.cursor.storage.from_('face_reg_database').upload(img_save_path,img_file,
+                                                            {"content-type": "image/jpg"})
 
     def CompareInput(self,img_buffer) -> int:
         if img_buffer is None: return -1
