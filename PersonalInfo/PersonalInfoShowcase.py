@@ -17,17 +17,14 @@ def PersonalInfoShowcase(Data,ID):
 def Login_Personal_Tab(Data):
     if 'login' not in st.session_state:
         st.session_state['login'] = None
-    if 'passsowrdrecover' not in st.session_state:
-        st.session_state['passwordrecover'] = None
     pass_mng = PasswordManager()
     face_mng = AIFaceReg()
     login_container = st.empty()
-    pwdrecover_container = st.empty()
     showcase_container = st.empty()
 
     if st.session_state['login'] == None:
         with login_container.container():
-            password_tab, face_tab = st.tabs(['Đăng nhập bằng password','Đăng nhập '])
+            password_tab, face_tab = st.tabs(['Đăng nhập bằng password','Đăng nhập bằng khuôn mặt'])
 
             with password_tab:
                 usr = st.text_input('Username',max_chars=255)
@@ -41,19 +38,20 @@ def Login_Personal_Tab(Data):
                         st.experimental_rerun()
             
             with face_tab:
-                face_mng.FetchData()
-                img_buffer = st.camera_input('Chụp ảnh khuôn mặt',help='Trong khung hình chỉ có 1 khuôn mặt')
-                res = face_mng.CompareInput(img_buffer)
-                if res == -1 and img_buffer is not None:
-                    st.error("Không nhận thấy khuôn mặt")
-                elif res == -2:
-                    st.error("Hơm 1 khuôn mặt trong ảnh")
-                else:
-                    st.write(f'Số thứ tự của bạn có phải là {res} không ? (Kiểm tra tại Danh sách điểm)')
-                    st.write(f'Nếu không xin hãy thử lại')
-                    if st.button('Xác nhận'):
-                        st.session_state['login'] = res
-                        st.experimental_rerun()
+                if st.button('Đăng nhập bằng khuôn mặt'):
+                    face_mng.FetchData()
+                    img_buffer = st.camera_input('Chụp ảnh khuôn mặt',help='Trong khung hình chỉ có 1 khuôn mặt')
+                    res = face_mng.CompareInput(img_buffer)
+                    if res == -1 and img_buffer is not None:
+                        st.error("Không nhận thấy khuôn mặt")
+                    elif res == -2:
+                        st.error("Hơm 1 khuôn mặt trong ảnh")
+                    elif res != -1:
+                        st.write(f'Số thứ tự của bạn có phải là {res} không ? (Kiểm tra tại Danh sách điểm)')
+                        st.write(f'Nếu không xin hãy thử lại')
+                        if st.button('Xác nhận'):
+                            st.session_state['login'] = res
+                            st.experimental_rerun()
 
     if st.session_state['login'] != None:
         login_container.empty()
@@ -67,8 +65,6 @@ def Login_Personal_Tab(Data):
             with setting:
                 logout = st.button('Logout')
                 if logout:
-                    face_mng.UpdateStorage()
-                    face_mng.ClearCache()
                     st.session_state['login'] = None
                     st.experimental_rerun()
                 
@@ -86,13 +82,16 @@ def Login_Personal_Tab(Data):
                     if pwd_state: st.success('Successfully changed password')
                     elif pwd_state == False: st.error('Change password failed')
 
+                
                 st.write('Cập nhập đăng nhập bằng khuôn mặt')
-                img_buffer = st.camera_input('Chụp hình khuôn mặt')
-                res = face_mng.QueueUpdate(img_buffer,st.session_state['login'])
-                if res[0] == True:
-                    st.success('Đăng kí thành công')
-                elif res[1] != '':
-                    st.error(res[1])
+                if st.button('Đăng ký đăng nhập bằng khuôn mặt'):
+                    img_buffer = st.camera_input('Chụp hình khuôn mặt')
+                    if st.button('Xác nhận'):
+                        res = face_mng.Update(img_buffer,st.session_state['login'])
+                        if res[0] == True:
+                            st.success('Đăng kí thành công')
+                        elif res[1] != '':
+                            st.error(res[1])
 
 
 # def test():
