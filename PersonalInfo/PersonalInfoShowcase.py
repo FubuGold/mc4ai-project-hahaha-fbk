@@ -17,6 +17,9 @@ def PersonalInfoShowcase(Data,ID):
 def Login_Personal_Tab(Data):
     if 'login' not in st.session_state:
         st.session_state['login'] = None
+    if 'login-activate' not in st.session_state:
+        st.session_state['face-activate'] = False
+
     pass_mng = PasswordManager()
     face_mng = AIFaceReg()
     login_container = st.empty()
@@ -38,7 +41,8 @@ def Login_Personal_Tab(Data):
                         st.experimental_rerun()
             
             with face_tab:
-                if st.button('Đăng nhập bằng khuôn mặt'):
+                st.session_state['face-activate'] = st.checkbox('Đăng nhập bằng khuôn mặt',value=False)
+                if st.session_state['face-activate']:
                     face_mng.FetchData()
                     img_buffer = st.camera_input('Chụp ảnh khuôn mặt',help='Trong khung hình chỉ có 1 khuôn mặt')
                     res = face_mng.CompareInput(img_buffer)
