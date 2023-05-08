@@ -94,7 +94,7 @@ def Login_Personal_Tab(Data):
                 if st.session_state['face-activate']:
                     img_buffer = st.camera_input('Chụp hình khuôn mặt')
                     if st.button('Xác nhận'):
-                        res = face_mng.Update(img_buffer,st.session_state['login'])
+                        res = face_mng.QueueUpdate(img_buffer,st.session_state['login'])
                         if res[0] == True:
                             st.success('Đăng kí thành công')
                         elif res[1] != '':
