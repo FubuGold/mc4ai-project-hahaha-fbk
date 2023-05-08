@@ -1,6 +1,7 @@
+dlib-bin
 scikit-learn
 streamlit
 supabase
 pandas
 opencv-python
-face_recognition
+face_recognition @ git+https://github.com/thetoby9944/face_recognition
