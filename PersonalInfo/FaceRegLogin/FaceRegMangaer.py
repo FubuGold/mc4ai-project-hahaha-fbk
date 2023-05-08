@@ -8,7 +8,7 @@ from supabase import create_client
 
 class AIFaceReg:
     
-    folder_path = os.path.join(os.path.dirname(__file__),'PersonalInfo/FaceRegLogin/cacheimage')
+    folder_path = os.path.dirname(os.path.realpath(__file__)) + '/PersonalInfo/FaceRegLogin/cacheimage'
     def CheckFile(self):
         name = []
         for file_name in os.path.dirname(__file__):
