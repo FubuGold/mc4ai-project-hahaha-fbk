@@ -2,5 +2,4 @@
      - conda-forge
  dependencies:
      - dlib
-     - opencv
      - face_recognition
