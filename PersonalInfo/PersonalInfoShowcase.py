@@ -68,6 +68,7 @@ def Login_Personal_Tab(Data):
                 PersonalInfoShowcase(Data,st.session_state['login'])
             
             with setting:
+                face_mng.CheckFile()
                 logout = st.button('Logout')
                 if logout:
                     face_mng.UpdateStorage()
