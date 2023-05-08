@@ -14,8 +14,8 @@ class AIFaceReg:
     known_id = []
     
     def __init__(self) -> None:
-        url = st.secrets['connect-supabase']['url']
-        key = st.secrets['connect-supabase']['key']
+        url = st.secrets['connect_supabase']['url']
+        key = st.secrets['connect_supabase']['key']
         self.cursor = create_client(url,key)
 
     def FetchData(self) -> None:
