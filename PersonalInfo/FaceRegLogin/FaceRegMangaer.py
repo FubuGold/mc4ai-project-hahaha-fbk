@@ -8,7 +8,7 @@ from supabase import create_client
 
 class AIFaceReg:
     
-    folder_path = f'PersonalInfo/FaceRegLogin/cacheimage'
+    folder_path = os.path.join(os.path.curdir,'PersonalInfo/FaceRegLogin/cacheimage')
     bucket_path = 'face_reg_database/FaceImage'
     known_encoding = []
     known_id = []
@@ -64,7 +64,6 @@ class AIFaceReg:
             
             self.cursor.storage.from_('face_reg_database').upload(img_save_path,img_path,
                                                                 {"content-type": "image/jpg"})
-
 
     def ClearCache(self) -> None:
         img_name_list = os.listdir(self.folder_path)
