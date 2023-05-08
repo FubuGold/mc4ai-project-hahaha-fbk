@@ -8,11 +8,12 @@ from supabase import create_client
 
 class AIFaceReg:
     
-    folder_path = os.path.dirname(os.path.realpath(__file__)).replace('/','\ ').replace(' ','')+ '\PersonalInfo\FaceRegLogin\cacheimage'
+    folder_path = os.path.dirname(os.path.realpath(__file__)).replace('/','\\')+ '\PersonalInfo\FaceRegLogin\cacheimage'
     bucket_path = 'face_reg_database\FaceImage'
     known_encoding = []
     known_id = []
     
+
     def __init__(self) -> None:
         url = st.secrets['connect_supabase']['url']
         key = st.secrets['connect_supabase']['key']
@@ -53,7 +54,7 @@ class AIFaceReg:
         
     def UpdateStorage(self,id) -> None:
         img_file_name = f'{id}.jpg'
-        img_path = f'{self.folder_path}\{img_file_name}'
+        img_path = f'{self.folder_path}\{img_file_name}'.replace('\\','/')
         img_save_path = f'{self.bucket_path}\{id}.jpg'
 
         _bucket_file_list = self.cursor.storage.from_('face_reg_database').list(self.bucket_path)
