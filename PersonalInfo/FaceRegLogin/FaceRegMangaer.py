@@ -34,7 +34,7 @@ class AIFaceReg:
         try:
             if img_buffer is None: return (False,'')
 
-            img_path = f'{self.folder_path}/{id}.jpg'
+            img_path = f'{self.folder_path}\{id}.jpg'
             img_file_byte = img_buffer.getvalue()
             img_file = cv2.imdecode(np.frombuffer(img_file_byte, np.uint8), cv2.IMREAD_COLOR)
 
@@ -53,8 +53,8 @@ class AIFaceReg:
         
     def UpdateStorage(self,id) -> None:
         img_file_name = f'{id}.jpg'
-        img_path = f'{self.folder_path}/{img_file_name}'
-        img_save_path = f'{self.bucket_path}/{id}.jpg'
+        img_path = f'{self.folder_path}\{img_file_name}'
+        img_save_path = f'{self.bucket_path}\{id}.jpg'
 
         _bucket_file_list = self.cursor.storage.from_('face_reg_database').list(self.bucket_path)
         _bucket_file_list = [file['name'] for file in _bucket_file_list]
