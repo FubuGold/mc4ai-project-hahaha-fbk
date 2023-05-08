@@ -3,3 +3,4 @@ streamlit
 supabase
 pandas
 opencv-python
+face_recognition
