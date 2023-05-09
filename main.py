@@ -11,7 +11,7 @@ def SubDataPass(Data):
     return pd.DataFrame({
                 'Username' : Data['NAME'] + Data.index.astype(str),
                 'Password' : ['123456789' for _ in Data.index]
-            })
+            }).reset_index(drop=True)
 
 def main(): 
     st.set_page_config(layout="wide")

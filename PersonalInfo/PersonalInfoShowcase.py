@@ -27,7 +27,7 @@ def Login_Personal_Tab(Data):
 
     if st.session_state['login'] == None:
         with login_container.container():
-            password_tab, face_tab = st.tabs(['Đăng nhập bằng password','Đăng nhập '])
+            password_tab, face_tab = st.tabs(['Đăng nhập bằng password','Đăng nhập bằng khuôn mặt'])
 
             with password_tab:
                 usr = st.text_input('Username',max_chars=255)
