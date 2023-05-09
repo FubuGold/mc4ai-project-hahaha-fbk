@@ -4,5 +4,5 @@ streamlit
 supabase
 pandas
 opencv-python
-pillowi
+pillow
 face_recognition @ git+https://github.com/thetoby9944/face_recognition
