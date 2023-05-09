@@ -12,8 +12,11 @@ def main():
         st.header('Login')
     with AnalyzeTab:
         st.header('Phân tích dữ liệu')
-        analyze(Data)
-        classify(Data, 4)
+        tab1, tab2 = st.tabs(["analyze","classify"])
+        with tab1:
+            analyze(Data)
+        with tab2:
+            classify(Data, 4)
     with DataTab:
         for i in range(1,11):
             Data[f"S{i}"].fillna(0, inplace = True)
