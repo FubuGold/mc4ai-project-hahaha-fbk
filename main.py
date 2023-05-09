@@ -11,7 +11,7 @@ def SubDataPass(Data):
     return pd.DataFrame({
                 'Username' : Data['NAME'] + Data.index.astype(str),
                 'Password' : ['123456789' for _ in Data.index]
-            }).reset_index(drop=True)
+            })
 
 def main(): 
     st.set_page_config(layout="wide")
@@ -30,8 +30,7 @@ def main():
         with col1:
             st.header('Danh sách điểm')
             st.write('Đã xáo trộn ngẫu nhiên')
-            SubData_Point = Data.drop(['NAME','GENDER','CLASS'],axis='columns').sample(frac=1, random_state=69)
-            SubData_Point.reset_index(drop=True)
+            SubData_Point = Data.drop(['NAME','GENDER','CLASS'],axis='columns').sample(frac=1, random_state=69).reset_index(drop=True)
             st.dataframe(data=SubData_Point, height=1000)
 
         with col2:
