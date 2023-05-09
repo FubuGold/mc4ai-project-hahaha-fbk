@@ -23,12 +23,17 @@ def visualize(d, k, n):
                                     y = "y", 
                                     z = "z", color = label),theme = None)
     # print(np.array(d["S6"]).astype(int),type(np.array(d["S6"]).astype(int)))
+def cout_datatable(d, label):
+    ...
+    
 def classify(data, n):
     filter = ["S6", "S10", "GPA"]
     used_data = data[filter].fillna(0)
     kmeans = KMeans(n_clusters=n, n_init='auto')
     kmeans.fit(used_data)
     visualize(used_data,kmeans,n)
+    ### xuất n bảng dữ liệu
+    cout_datatable(used_data,kmeans.labels_)
     # print(kmeans.cluster_centers_)
     # print(kmeans.labels_)
     
