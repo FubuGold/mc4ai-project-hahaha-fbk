@@ -16,7 +16,7 @@ class AIFaceReg:
         self.cursor = create_client(url,key)
 
     def FetchData(self) -> None:
-        img_data = self.cursor.table('user').select('id','face_img').neq('face_img',[]).execute().data
+        img_data = self.cursor.table('user').select('id','face_img').neq('face_img',"'{}'::smallint[]").execute().data
         # img_data = [data for data in img_data if data['face_img'] is not None] # Filter none
         for data in img_data:
             img_file = np.array(data['face_img']).astype(np.uint8)
