@@ -32,7 +32,9 @@ def main():
         with tab1:
             haha.analyze(Data)
         with tab2:
-            huhu.classify(Data, 4)
+            number = int(st.slider('Number input',min_value=1,max_value=10, step = 1))
+            if st.button('OK'):
+                huhu.classify(Data, number)
 
     with DataTab:
         col1,col2 = st.columns(2)

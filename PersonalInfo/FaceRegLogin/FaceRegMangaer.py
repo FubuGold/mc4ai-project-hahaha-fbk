@@ -1,4 +1,5 @@
 import numpy as np
+from httpx import ReadTimeout,WriteTimeout
 import streamlit as st
 import face_recognition as fr
 from supabase import create_client
@@ -16,17 +17,20 @@ class AIFaceReg:
         self.cursor = create_client(url,key)
 
     def FetchData(self) -> None:
-        img_data = self.cursor.table('user').select('id','face_img').neq('face_img',r'{}').execute().data
-        # img_data = [data for data in img_data if data['face_img'] is not None] # Filter none
-        for data in img_data:
-            img_file = np.array(data['face_img']).astype(np.uint8)
-            self.known_encoding.append(fr.face_encodings(img_file)[0])
-            self.known_id.append(data['id'])
-        
+        try:
+            img_data = self.cursor.table('user').select('id','face_img').neq('face_img',r'[]').execute().data
+            # img_data = [data for data in img_data if data['face_img'] is not None] # Filter none
+            for data in img_data:
+                self.known_encoding.append(data['face_img'])
+                self.known_id.append(data['id'])
+        except Exception as e:
+            if e == ReadTimeout:
+                st.warning('Kết nối với máy chủ. Xin hãy chờ')
 
     def UpdateImg(self,img_buffer,id) -> tuple:
         try:
             if img_buffer is None: return (False,'')
+            connected = False
 
             # Convert image
             img_file = Image.open(img_buffer)
@@ -38,11 +42,13 @@ class AIFaceReg:
             elif len(face_loc) > 1:
                 return (False,'Có nhiều hơn 1 khuôn mặt')
             
-            self.cursor.table('user').update({'face_img':img_file.tolist()}).eq("id",id).execute()
-
+            img_encode = fr.face_encodings(img_file)[0]
+            self.cursor.table('user').update({'face_img':img_encode}).eq("id",id).execute()
+            
             return (True,'Thành công')
-        except:
-            return (False,'Đã xảy ra lỗi. Vui lòng thử lại')
+        except Exception as e:
+            if e == WriteTimeout: return(True,'Kết nối với máy chủ. Thông tin đã được nhận')
+            return (False,'Đã xảy ra lỗi, vui lòng thử lại')
 
     def CompareInput(self,img_buffer) -> int:
         if img_buffer is None: return -1

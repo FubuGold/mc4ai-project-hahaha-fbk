@@ -18,11 +18,10 @@ class PasswordManager:
         return hashing.hexdigest()
 
     def DefaultPassReset(self,Data) -> None:
-        self.cursor.table("user").delete()
         hash_pwd = self.hashing('123456789'.encode())
         for i in Data.index:
             username = Data['NAME'][i] + str(i)
-            self.cursor.table("user").insert({'username':username,'pass':hash_pwd,'id':i}).execute()
+            self.cursor.table("user").upsert({'username':username,'pass':hash_pwd,'id':i,'face_img':[]}).execute()
 
     def ValidateInput(self,username : str,password : str) -> bool:
         return username.find(' ') == -1 and username.find("'") == -1 and username.find('=') == -1 and  password.find(' ') == -1 and password.find("'") == -1 and password.find('=') == -1
