@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-from haha import *
-from huhu import *
+from DataAnalyze import haha
+from DataAnalyze import huhu
 from PersonalInfo.PersonalInfoShowcase import Login_Personal_Tab
 
 @st.cache_data
@@ -30,9 +30,9 @@ def main():
         st.header('Phân tích dữ liệu')
         tab1, tab2 = st.tabs(["analyze","classify"])
         with tab1:
-            analyze(Data)
+            haha.analyze(Data)
         with tab2:
-            classify(Data, 4)
+            huhu.classify(Data, 4)
 
     with DataTab:
         col1,col2 = st.columns(2)
