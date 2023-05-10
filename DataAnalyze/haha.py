@@ -34,10 +34,8 @@ def analyze(data):
     data.replace(float('nan'), 0)
     average = pd.DataFrame(columns=["Session", "Average Score"])
     for i in range(1, 11): 
-        average = average.append(
-            pd.Series([f"S{i}", round(data[f"S{i}"].mean(), 1)], index=average.columns), 
-            ignore_index=True
-        )
+        average.loc[len(average.index)] = [f"S{i}", round(data[f"S{i}"].mean(), 1)]
+    
     st.plotly_chart(px.bar(average, y = "Average Score", x = "Session"), theme = None)
     st.write('''
 
@@ -48,3 +46,10 @@ def analyze(data):
         - Theo tương quan, điểm trung bình các Session cao đều trên 8(trừ Midterm 7.5 và Final 6.1).\n
         
     ''')
+
+def test():
+    Data = pd.read_csv('py4ai-score.csv')
+    analyze(Data)
+
+if __name__ == '__main__':
+    test()
