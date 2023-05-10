@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+from haha import *
+from huhu import *
 from PersonalInfo.PersonalInfoShowcase import Login_Personal_Tab
 
 @st.cache_data
@@ -14,6 +16,8 @@ def SubDataPass(Data):
             })
 
 def main(): 
+    Data = pd.read_csv('py4ai-score.csv')
+    Data.drop(['NAME','CLASS'],axis='columns',inplace=True)
     st.set_page_config(layout="wide")
     st.title('Phân tích và xem điểm Python4AI 092022')
     Data = ReadData()
@@ -24,6 +28,11 @@ def main():
         
     with AnalyzeTab:
         st.header('Phân tích dữ liệu')
+        tab1, tab2 = st.tabs(["analyze","classify"])
+        with tab1:
+            analyze(Data)
+        with tab2:
+            classify(Data, 4)
 
     with DataTab:
         col1,col2 = st.columns(2)
@@ -31,6 +40,11 @@ def main():
             st.header('Danh sách điểm')
             st.write('Đã xáo trộn ngẫu nhiên')
             SubData_Point = Data.drop(['NAME','GENDER','CLASS'],axis='columns').sample(frac=1, random_state=69).reset_index(drop=True)
+            SubData_Point["REG-MC4AI"].fillna("N", inplace = True)
+            for i in range(1,11):
+                 SubData_Point[f"S{i}"].fillna(0,inplace = True)
+            SubData_Point["BONUS"].fillna(0,inplace = True)
+            
             st.dataframe(data=SubData_Point, height=1000)
 
         with col2:
@@ -43,7 +57,6 @@ def main():
                     st.dataframe(data=SubData, height=1000)
                 else:
                     st.dataframe(data=SubData.loc[SubData['Username'].str.contains(search)])
-
 
 if __name__ == '__main__':
     main()
