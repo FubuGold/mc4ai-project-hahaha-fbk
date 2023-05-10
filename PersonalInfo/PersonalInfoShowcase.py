@@ -7,6 +7,7 @@ from PersonalInfo.FaceRegLogin.FaceRegMangaer import AIFaceReg
 
 def PersonalInfoShowcase(Data : pd.DataFrame,ID : int):
     model = ComparePredictReal(Data)
+    Data.fillna(0)
     st.markdown('## Thông tin cá nhân')
     st.table(Data[ ['NAME','GENDER','CLASS','PYTHON-CLASS','GPA','REG-MC4AI'] ].iloc[ID])
 
