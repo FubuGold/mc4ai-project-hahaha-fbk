@@ -18,7 +18,7 @@ class AIFaceReg:
 
     def FetchData(self) -> None:
         try:
-            img_data = self.cursor.table('user').select('id','face_img').neq('face_img',r'[]').execute().data
+            img_data = self.cursor.table('user').select('id','face_img').neq('face_img',r'{}').execute().data
             # img_data = [data for data in img_data if data['face_img'] is not None] # Filter none
             for data in img_data:
                 self.known_encoding.append(data['face_img'])
