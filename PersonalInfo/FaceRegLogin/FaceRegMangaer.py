@@ -42,7 +42,7 @@ class AIFaceReg:
         elif len(face_loc) > 1:
             return (False,'Có nhiều hơn 1 khuôn mặt')
         
-        img_encode = fr.face_encodings(img_file)[0]
+        img_encode = fr.face_encodings(img_file)[0].tolist()
         self.cursor.table('user').update({'face_img':img_encode}).eq("id",id).execute()
         
         return (True,'Thành công')
