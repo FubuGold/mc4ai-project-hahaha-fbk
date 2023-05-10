@@ -28,27 +28,27 @@ class AIFaceReg:
                 st.warning('Kết nối với máy chủ. Xin hãy chờ')
 
     def UpdateImg(self,img_buffer,id) -> tuple:
-        # try:
-        if img_buffer is None: return (False,'')
-        connected = False
+        try:
+            if img_buffer is None: return (False,'')
+            connected = False
 
-        # Convert image
-        img_file = Image.open(img_buffer)
-        img_file = np.array(img_file)
+            # Convert image
+            img_file = Image.open(img_buffer)
+            img_file = np.array(img_file)
 
-        face_loc = fr.face_locations(img_file)
-        if len(face_loc) == 0:
-            return (False,'Không nhận khuôn mặt')
-        elif len(face_loc) > 1:
-            return (False,'Có nhiều hơn 1 khuôn mặt')
-        
-        img_encode = fr.face_encodings(img_file)[0].tolist()
-        self.cursor.table('user').update({'face_img':img_encode}).eq("id",id).execute()
-        
-        return (True,'Thành công')
-        # except Exception as e:
-        #     if e == WriteTimeout: return(True,'Kết nối với máy chủ. Thông tin đã được nhận')
-        #     return (False,'Đã xảy ra lỗi, vui lòng thử lại')
+            face_loc = fr.face_locations(img_file)
+            if len(face_loc) == 0:
+                return (False,'Không nhận khuôn mặt')
+            elif len(face_loc) > 1:
+                return (False,'Có nhiều hơn 1 khuôn mặt')
+            
+            img_encode = fr.face_encodings(img_file)[0].tolist()
+            self.cursor.table('user').update({'face_img':img_encode}).eq("id",id).execute()
+            
+            return (True,'Thành công')
+        except Exception as e:
+            if e == WriteTimeout: return(True,'Kết nối với máy chủ. Thông tin đã được nhận')
+            return (False,'Đã xảy ra lỗi, vui lòng thử lại')
 
     def CompareInput(self,img_buffer) -> int:
         if img_buffer is None: return -1
