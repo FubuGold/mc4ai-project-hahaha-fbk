@@ -1,0 +1,8 @@
+dlib-bin
+scikit-learn
+streamlit
+supabase
+pandas
+opencv-python
+pillow
+face_recognition @ git+https://github.com/thetoby9944/face_recognition
