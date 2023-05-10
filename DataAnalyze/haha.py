@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 def phan_bo_diem(data, s):
-    st.plotly_chart(px.histogram(data, x = s, color = "GENDER"), theme = None)
+    st.plotly_chart(px.histogram(data, x = s,range_x=(0,10), color = "GENDER"), theme = None)
 def analyze(data):
     col1, col2 = st.columns(2)
     with col1:
@@ -47,9 +47,9 @@ def analyze(data):
         
     ''')
 
-def test():
-    Data = pd.read_csv('py4ai-score.csv')
-    analyze(Data)
+# def test():
+#     Data = pd.read_csv('py4ai-score.csv')
+#     analyze(Data)
 
-if __name__ == '__main__':
-    test()
+# if __name__ == '__main__':
+#     test()

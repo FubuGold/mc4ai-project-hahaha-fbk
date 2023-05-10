@@ -1,20 +1,33 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 from PersonalInfo.PersonalInfoManager import ComparePredictReal
 from PersonalInfo.PasswordLogin.PasswordManager import PasswordManager
 from PersonalInfo.FaceRegLogin.FaceRegMangaer import AIFaceReg
 
-def PersonalInfoShowcase(Data,ID):
+def PersonalInfoShowcase(Data : pd.DataFrame,ID : int):
     model = ComparePredictReal(Data)
-    st.header('Xem điểm')
-    st.markdown('## Điểm cá nhân')
-    st.table(Data.iloc[ID])
+    st.markdown('## Thông tin cá nhân')
+    st.table(Data[ ['NAME','GENDER','CLASS','PYTHON-CLASS','GPA','REG-MC4AI'] ].iloc[ID])
+
+    st.markdown('## Điểm thành phần')
+    homeword_label = [f'S{i}' for i in range(1,11)]
+    st.dataframe(Data[homeword_label + ['BONUS']].loc[Data.index == ID])
+
+    st.markdown('## Biểu đồ điểm')
+    point_data = {
+        'Homework':homeword_label,
+        'Point': Data[homeword_label].iloc[ID].values
+    }
+    st.write(Data[homeword_label + ['BONUS']].loc[Data.index == ID].values.reshape(-1,1).shape)
+    st.plotly_chart(px.line(data_frame=point_data,x='Homework',y='Point',range_y=(0,10)))
+
     st.markdown('## Dự đoán bằng AI Regression')
     st.table(model.CompareTable(Data.iloc[ID]))
     st.markdown("### **Nhận xét:**")
     st.markdown('Giữa **trung bình điểm homework**, **midterm exam** và **final exam** không có tính liên kết chặt chẽ, thể hiện qua độ chính xác của AI')
 
-def Login_Personal_Tab(Data):
+def Login_Personal_Tab(Data: pd.DataFrame):
     if 'login' not in st.session_state:
         st.session_state['login'] = None
     if 'face-activate' not in st.session_state:
@@ -101,7 +114,8 @@ def Login_Personal_Tab(Data):
 
 # def test():
 #     data = pd.read_csv('py4ai-score.csv')
-#     Login_Personal_Tab(data)
+#     PersonalInfoShowcase(data,69)
+#     # Login_Personal_Tab(data)
 
 # if __name__ == '__main__':
 #     test()
