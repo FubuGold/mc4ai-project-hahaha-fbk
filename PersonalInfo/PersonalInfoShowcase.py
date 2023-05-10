@@ -19,7 +19,6 @@ def PersonalInfoShowcase(Data : pd.DataFrame,ID : int):
         'Homework':homeword_label,
         'Point': Data[homeword_label].iloc[ID].values
     }
-    st.write(Data[homeword_label + ['BONUS']].loc[Data.index == ID].values.reshape(-1,1).shape)
     st.plotly_chart(px.line(data_frame=point_data,x='Homework',y='Point',range_y=(0,10)))
 
     st.markdown('## Dự đoán bằng AI Regression')
