@@ -13,7 +13,7 @@ def PersonalInfoShowcase(Data : pd.DataFrame,ID : int):
 
     st.markdown('## Điểm thành phần')
     homeword_label = [f'S{i}' for i in range(1,11)]
-    st.dataframe(Data[homeword_label + ['BONUS']].loc[Data.index == ID])
+    st.dataframe(Data[homeword_label + ['BONUS']].loc[Data.index == ID].fillna(0))
 
     st.markdown('## Biểu đồ điểm')
     point_data = {
