@@ -18,7 +18,7 @@ def PersonalInfoShowcase(Data : pd.DataFrame,ID : int):
     st.markdown('## Biểu đồ điểm')
     point_data = {
         'Homework':homeword_label,
-        'Point': Data[homeword_label].iloc[ID].values
+        'Point': Data[homeword_label].iloc[ID].fillna(0).values
     }
     st.plotly_chart(px.line(data_frame=point_data,x='Homework',y='Point',range_y=(0,10)))
 
